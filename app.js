@@ -23,36 +23,38 @@ const createClient = () => {
 
 const createPets = () => {
     const petsName = ["Juan", "Pulgoso", "Manchas", "Matias", "Zacarias", "Pulgas", "Pedro", "Alfonso", "Manuel", "Alejandro"];
-    var numeroDecimal = Math.random();
-    var numeroAleatorio = Math.floor(numeroDecimal * 9);
+    const animalTypes = ["Dog", "Cat", "Bird", "Fish", "Hamster", "Turtle", "Rabbit", "Guinea Pig", "Snake", "Lizard"];
+    
+    const numeroDecimal = Math.random();
+    const numeroAleatorio = Math.floor(numeroDecimal * 9);
 
-    axios.get('https://dogapi.dog/api/v2/breeds')
-        .then((response) => {
-            const responseData = response.data.data;
-            let name_dog = "San Bernardo";
+    const randomPetName = petsName[numeroAleatorio];
+    const randomAnimalType = animalTypes[Math.floor(Math.random() * animalTypes.length)];
+    
+    let randomBreed;
 
-            // Convertir a un array si no es un array
-            const dataArray = Array.isArray(responseData) ? responseData : Object.values(responseData);
-            // Obtener el nombre de la raza de perro aleatoria
-            const { name } = dataArray[numeroAleatorio];
-            // const { name } = response.data.data[numeroAleatorio];
-            console.log(name);
-            const sql = `INSERT INTO pets (name,type,breed,owner_id, created_at) VALUES ('${petsName[numeroAleatorio]}','Dog','${name_dog}','${numeroAleatorio}', '2024-02-01 19:07:41')`;
-            db.query(sql, (err, result) => {
-                if (err) throw err;
-                console.log('Mascota creada!');
-                /*const sql = `INSERT INTO logs (description, time_stamp) VALUES ('Cliente creado', NOW())`;
-                db.query(sql, (err, result) => {
-                    if (err) throw err;
-                    console.log('Log creado!');
-                });*/
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    switch (randomAnimalType) {
+        case "Dog":
+            const dogBreeds = ["San Bernardo", "Labrador", "Poodle", "Bulldog", "Chihuahua"];
+            randomBreed = dogBreeds[Math.floor(Math.random() * dogBreeds.length)];
+            break;
+        case "Cat":
+            const catBreeds = ["Siamese", "Persian", "Maine Coon", "Bengal", "Sphynx"];
+            randomBreed = catBreeds[Math.floor(Math.random() * catBreeds.length)];
+            break;
+        default:
+            randomBreed = "Unknown";
+    }
+
+    const sql = `INSERT INTO pets (name, type, breed, owner_id, created_at) VALUES ('${randomPetName}', '${randomAnimalType}', '${randomBreed}', '${numeroAleatorio}', '2024-02-01 19:07:41')`;
+
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log('Mascota creada!');
+    });
 }
 
-// setInterval(createClient,5000);
 
-setInterval(createPets, 1000);
+setInterval(createClient,5000);
+
+setInterval(createPets, 4000);
